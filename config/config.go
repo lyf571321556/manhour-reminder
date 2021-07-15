@@ -13,6 +13,7 @@ const (
 
 type Config struct {
 	OnesProjectUrl string    `yaml:"ones_project_url"`
+	TeamUUID       string    `yaml:"team_uuid"`
 	BotList        []BotInfo `yaml:"bot_list"`
 }
 

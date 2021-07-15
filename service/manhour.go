@@ -1,5 +1,13 @@
 package service
 
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/lyf571321556/qiye-wechat-bot-api/api"
+	"io/ioutil"
+	"net/http"
+)
+
 var (
 	login_auth = ""
 )
@@ -33,13 +41,13 @@ func generateGqlForManhour(userids []string, departmentUUID string) interface{} 
 				"timeField":  "users.manhours.startTime",
 				"valueField": "users.manhours.hours",
 				"unit":       "day",
-				"quick":      "last_7_days",
+				"quick":      "today",
 			},
 			"timeSeriesWithWorkDays": map[string]interface{}{
 				"timeField":  "users.manhours.startTime",
 				"valueField": "users.manhours.hours",
 				"unit":       "day",
-				"quick":      "last_7_days",
+				"quick":      "today",
 				"constant":   800000,
 				"workdays": []string{
 					"Mon",
@@ -54,4 +62,49 @@ func generateGqlForManhour(userids []string, departmentUUID string) interface{} 
 		},
 	}
 	return qglQuery
+}
+
+func FetchManhourByUUIDAndDepartmentUUID(url string, auth User, departmentUUID string, userUUIDS []string) (manhours []interface{}, err error) {
+	manhourGql := generateGqlForManhour(userUUIDS, departmentUUID)
+	var gqlJson []byte
+	if gqlJson, err = json.Marshal(manhourGql); err != nil {
+		return manhours, err
+	}
+	request, err := api.NewRequest(http.MethodPost, url, gqlJson)
+	if err != nil {
+		return manhours, err
+	}
+
+	request.Header.Add("Ones-User-Id", auth.UserId)
+	request.Header.Add("Ones-Auth-Token", auth.Token)
+	_, err = api.ExecuteHTTP(request, func(resp *http.Response) error {
+		rawResp, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return err
+		}
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("error:%s", string(rawResp))
+		}
+
+		dataMap := make(map[string]map[string]interface{})
+		if err = json.Unmarshal(rawResp, &dataMap); err != nil {
+			return fmt.Errorf("parse error: %w\nraw response: %s", err, rawResp)
+		}
+
+		buckets := dataMap["data"]["buckets"]
+		if bucketsMapList, ok := buckets.([]interface{}); ok {
+			for _, bucket := range bucketsMapList {
+				println(bucket)
+				str, err := json.Marshal(bucket)
+				if err != nil {
+					fmt.Println(err)
+				}
+				fmt.Println("map to json", string(str))
+			}
+		}
+		println(buckets)
+		return nil
+	})
+
+	return manhours, err
 }

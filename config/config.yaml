@@ -1,5 +1,5 @@
 ones_project_url: "https://api.ones.ai/project/v1"
-
+team_uuid: "RDjYMhKq"
 bot_list:
   - bot_name: "Bot"
     bot_key: "8c8c33c5-2ce2-4fae-b610-be137741a06d"

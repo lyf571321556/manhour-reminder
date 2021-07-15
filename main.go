@@ -8,6 +8,8 @@ import (
 	"log"
 )
 
+var AppAuth service.User
+
 func main() {
 	msg := text.TextMsg{MsgType: "", ContentData: &text.ContentData{
 		Content:             "",
@@ -24,10 +26,22 @@ func main() {
 
 	//获取token
 	loginUrl := fmt.Sprintf("%s%s", config.AppConfig.OnesProjectUrl, service.AUTH_LOGIN)
-	token, err := service.Login(loginUrl, "wuxingjuan@ones.ai", "juan1997")
+	AppAuth, err := service.Login(loginUrl, "wuxingjuan@ones.ai", "juan1997")
 	if err != nil {
 		log.Fatal(err)
 	}
-	println(token)
 
+	fetchManhourUrl := fmt.Sprintf("%s%s", config.AppConfig.OnesProjectUrl, fmt.Sprintf(service.ITEMS_GQL, config.AppConfig.TeamUUID))
+	departmentUUID := config.AppConfig.BotList[0].DepartmentUUID
+	userUUIDs := make([]string, 0)
+	for _, mapping := range config.AppConfig.BotList[0].UserMappings {
+		userUUIDs = append(userUUIDs, mapping.OnesUserid)
+	}
+	manhourList, err := service.FetchManhourByUUIDAndDepartmentUUID(fetchManhourUrl, AppAuth, departmentUUID, userUUIDs)
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	println(len(manhourList))
 }
