@@ -1,0 +1,13 @@
+ones_project_url: "https://api.ones.ai/project/v1"
+
+bot_list:
+  - bot_name: "Bot"
+    bot_key: "8c8c33c5-2ce2-4fae-b610-be137741a06d"
+    department_uuid: "XGMhZJ3x"
+    user_mappings:
+      - ones_userid: "dzfJhThR"
+        ones_username: "刘燕峰"
+        wechat_userid: "ChuYang"
+      - ones_userid: "AbnBqcew"
+        ones_username: "吴兴娟"
+        wechat_userid: "WuXingJuan"
