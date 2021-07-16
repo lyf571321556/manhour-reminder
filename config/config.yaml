@@ -1,8 +1,8 @@
 ones_project_url: "https://api.ones.ai/project/v1"
 team_uuid: "RDjYMhKq"
 msg_content: "请以下人员记得登记工时。\n"
-#task_crontab: "0 15/15 18 ? * MON-FRI"
-task_crontab: "0/5 * 18 ? * MON-FRI"
+task_crontab: "0 15/15 18 ? * MON-FRI"
+#task_crontab: "0/1 * 18 ? * MON-FRI"
 bot_list:
   - bot_name: "工时机器人"
     bot_key: "d779637b-21ef-4a86-9a5d-7d43d83a55cc"
