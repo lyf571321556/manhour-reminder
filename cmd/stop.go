@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"io/ioutil"
+	"os/exec"
 )
 
 var stopCmd = &cobra.Command{
@@ -9,10 +11,10 @@ var stopCmd = &cobra.Command{
 	Short: "stop man-hour rebot.",
 	Long:  `stop man-hour rebot.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//strb, _ := ioutil.ReadFile(".pid.lock")
-		//command := exec.Command("kill", string(strb))
-		//command.Start()
-		println("service stop...")
+		strb, _ := ioutil.ReadFile(".pid.lock")
+		command := exec.Command("kill", string(strb))
+		command.Start()
+		println("service stopped...")
 	},
 }
 
