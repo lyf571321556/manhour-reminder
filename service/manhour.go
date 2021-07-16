@@ -5,12 +5,31 @@ import (
 	"fmt"
 	"github.com/lyf571321556/qiye-wechat-bot-api/api"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
-var (
-	login_auth = ""
-)
+type ManhourInfo struct {
+	ActualHours int64    `json:"actualHours"`
+	User        UserInfo `json:"columnField"`
+}
+
+type UserInfo struct {
+	UUID       string `json:"uuid"`
+	UserName   string `json:"name"`
+	WechatUUID string `json:"wechat_uuid"`
+}
+
+func (manhourinfo *ManhourInfo) getActualHours() int64 {
+	return manhourinfo.ActualHours / 100000
+}
+
+func (manhourinfo *ManhourInfo) generateRemindDesc() string {
+	if manhourinfo.getActualHours() >= 0 && manhourinfo.getActualHours() < 8 {
+		return fmt.Sprintf("%s,记得登记工时。\n", manhourinfo.User.UserName)
+	}
+	return ""
+}
 
 func generateGqlForManhour(userids []string, departmentUUID string) interface{} {
 	qglQuery := map[string]interface{}{
@@ -64,19 +83,20 @@ func generateGqlForManhour(userids []string, departmentUUID string) interface{} 
 	return qglQuery
 }
 
-func FetchManhourByUUIDAndDepartmentUUID(url string, auth User, departmentUUID string, userUUIDS []string) (manhours []interface{}, err error) {
+func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUUID string, userUUIDS []string) (userUUIDToManhoutMap map[string]ManhourInfo, err error) {
 	manhourGql := generateGqlForManhour(userUUIDS, departmentUUID)
 	var gqlJson []byte
 	if gqlJson, err = json.Marshal(manhourGql); err != nil {
-		return manhours, err
+		return userUUIDToManhoutMap, err
 	}
 	request, err := api.NewRequest(http.MethodPost, url, gqlJson)
 	if err != nil {
-		return manhours, err
+		return userUUIDToManhoutMap, err
 	}
 
 	request.Header.Add("Ones-User-Id", auth.UserId)
 	request.Header.Add("Ones-Auth-Token", auth.Token)
+	userUUIDToManhoutMap = make(map[string]ManhourInfo, 0)
 	_, err = api.ExecuteHTTP(request, func(resp *http.Response) error {
 		rawResp, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
@@ -90,21 +110,25 @@ func FetchManhourByUUIDAndDepartmentUUID(url string, auth User, departmentUUID s
 		if err = json.Unmarshal(rawResp, &dataMap); err != nil {
 			return fmt.Errorf("parse error: %w\nraw response: %s", err, rawResp)
 		}
-
 		buckets := dataMap["data"]["buckets"]
 		if bucketsMapList, ok := buckets.([]interface{}); ok {
 			for _, bucket := range bucketsMapList {
-				println(bucket)
-				str, err := json.Marshal(bucket)
+				var manhourInfo ManhourInfo
+				bytes, err := json.Marshal(bucket)
 				if err != nil {
-					fmt.Println(err)
+					log.Println(err)
+					continue
 				}
-				fmt.Println("map to json", string(str))
+				err = json.Unmarshal(bytes, &manhourInfo)
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+				userUUIDToManhoutMap[manhourInfo.User.UUID] = manhourInfo
 			}
 		}
-		println(buckets)
-		return nil
+		return err
 	})
 
-	return manhours, err
+	return userUUIDToManhoutMap, err
 }

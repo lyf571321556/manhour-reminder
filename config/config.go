@@ -14,6 +14,8 @@ const (
 type Config struct {
 	OnesProjectUrl string    `yaml:"ones_project_url"`
 	TeamUUID       string    `yaml:"team_uuid"`
+	MsgContent     string    `yaml:"msg_content"`
+	TaskCrontab    string    `yaml:"task_crontab"`
 	BotList        []BotInfo `yaml:"bot_list"`
 }
 
@@ -35,7 +37,7 @@ func (config *Config) toString() string {
 
 var AppConfig Config
 
-func init() {
+func Init() {
 	yamlFile, err := ioutil.ReadFile(defaultConfigPath)
 	if err != nil {
 		fmt.Printf("failed to read yaml file : %v\n", err)

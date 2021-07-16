@@ -13,7 +13,7 @@ var (
 	ITEMS_GQL  = "/team/%s/items/graphql"
 )
 
-type User struct {
+type AuthInfo struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	UserId   string `json:"uuid"`
@@ -21,8 +21,8 @@ type User struct {
 }
 
 // Login for token /*
-func Login(url, username, password string) (user User, err error) {
-	result := User{
+func Login(url, username, password string) (user AuthInfo, err error) {
+	result := AuthInfo{
 		Email:    username,
 		Password: password,
 	}
@@ -36,7 +36,7 @@ func Login(url, username, password string) (user User, err error) {
 	}
 
 	var loginInfo = new(struct {
-		UserInfo User `json:"user"`
+		UserInfo AuthInfo `json:"user"`
 	})
 	_, err = api.ExecuteHTTP(request, func(resp *http.Response) error {
 		rawResp, err := ioutil.ReadAll(resp.Body)
