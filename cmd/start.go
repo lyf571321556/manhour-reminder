@@ -7,6 +7,7 @@ import (
 	"github.com/lyf571321556/manhour-reminder/service"
 	"github.com/robfig/cron/v3"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"log"
 	"os"
@@ -20,8 +21,10 @@ var startCmd = &cobra.Command{
 	Long:  `start man-hour rebot.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		daemon, _ := cmd.Flags().GetBool("daemon")
-		user, _ := cmd.Flags().GetString("user")
-		password, _ := cmd.Flags().GetString("password")
+		//user, _ := cmd.Flags().GetString("user")
+		//password, _ := cmd.Flags().GetString("password")
+		user := viper.GetString("user")
+		password := viper.GetString("password")
 		if daemon {
 			command := exec.Command("./manhour-reminder", "start", fmt.Sprintf("-u=%s", user), fmt.Sprintf("-p=%s", password)) //go run main.go start
 			command.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Foreground: false}
