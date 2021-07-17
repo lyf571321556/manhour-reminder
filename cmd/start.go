@@ -21,9 +21,12 @@ var startCmd = &cobra.Command{
 	Long:  `start man-hour rebot.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		daemon, _ := cmd.Flags().GetBool("daemon")
+		configPath, _ := cmd.Flags().GetString("config")
+		config.Init(configPath)
+		bot.InitBot()
 		//user, _ := cmd.Flags().GetString("user")
 		//password, _ := cmd.Flags().GetString("password")
-		user := viper.GetString("user")
+		user := viper.GetString("account")
 		password := viper.GetString("password")
 		if daemon {
 			command := exec.Command("./manhour-reminder", "start", fmt.Sprintf("-u=%s", user), fmt.Sprintf("-p=%s", password)) //go run main.go start
@@ -59,8 +62,10 @@ func startServer(user string, password string) {
 	c := cron.New(cron.WithParser(cron.NewParser(
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
+	println(config.AppConfig.TaskCrontab)
 	c.AddFunc(config.AppConfig.TaskCrontab, func() {
-		go bot.SendMsgToUser(AppAuth)
+		println("运行一次 by" + AppAuth.Email)
+		//go bot.SendMsgToUser(AppAuth)
 	})
 	c.Start()
 	select {}

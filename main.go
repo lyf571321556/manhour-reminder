@@ -1,9 +1,7 @@
 package main
 
 import (
-	"github.com/lyf571321556/manhour-reminder/bot"
 	"github.com/lyf571321556/manhour-reminder/cmd"
-	"github.com/lyf571321556/manhour-reminder/config"
 	"github.com/lyf571321556/manhour-reminder/service"
 	"log"
 )
@@ -11,8 +9,6 @@ import (
 func init() {
 	log.SetPrefix("Rebot: ")
 	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
-	config.Init()
-	bot.InitBot()
 }
 
 var AppAuth service.AuthInfo

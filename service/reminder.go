@@ -8,26 +8,26 @@ import (
 
 func FetchNeedToRemindUserlist(auth AuthInfo) (list map[string][]UserInfo, err error) {
 	list = make(map[string][]UserInfo, 0)
-	for _, botInfo := range config.AppConfig.BotList {
+	for _, botInfo := range config.AppConfig.RobotList {
 		reminedUserInBot, err := fetchNeedRemidedUserInBot(auth, botInfo)
 		if err != nil {
-			log.Printf("Bot(%s-%s) occur error:%w\n", botInfo.BotKey, botInfo.BotName, err)
+			log.Printf("Bot(%s-%s) occur error:%w\n", botInfo.RobotKey, botInfo.RobotName, err)
 			continue
 		}
 		if len(reminedUserInBot) > 0 {
-			list[botInfo.BotKey] = reminedUserInBot
+			list[botInfo.RobotKey] = reminedUserInBot
 		}
 	}
 	return list, err
 }
 
-func fetchNeedRemidedUserInBot(auth AuthInfo, botinfo config.BotInfo) (reminedUserInBot []UserInfo, err error) {
+func fetchNeedRemidedUserInBot(auth AuthInfo, robotinfo config.RobotInfo) (reminedUserInBot []UserInfo, err error) {
 	reminedUserInBot = make([]UserInfo, 0)
 	fetchManhourUrl := fmt.Sprintf("%s%s", config.AppConfig.OnesProjectUrl, fmt.Sprintf(ITEMS_GQL, config.AppConfig.TeamUUID))
-	departmentUUID := botinfo.DepartmentUUID
+	departmentUUID := robotinfo.DepartmentUUID
 	userUUIDs := make([]string, 0)
 	onesUserIdToWechatUserIdMapping := make(map[string]string, 0)
-	for _, mapping := range config.AppConfig.BotList[0].UserMappings {
+	for _, mapping := range robotinfo.UserMappings {
 		userUUIDs = append(userUUIDs, mapping.OnesUserid)
 		onesUserIdToWechatUserIdMapping[mapping.OnesUserid] = mapping.WechatUserid
 	}

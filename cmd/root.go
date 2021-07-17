@@ -26,21 +26,19 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/config/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./config/config.yaml)")
 	rootCmd.PersistentFlags().BoolP("daemon", "d", false, "service run on background?")
-	rootCmd.PersistentFlags().StringP("user", "u", "", "ONES的用户名")
+	rootCmd.PersistentFlags().StringP("account", "a", "", "ONES的用户名")
 	rootCmd.PersistentFlags().StringP("password", "p", "", "ONES的密码")
 
 	//通过配置文件绑定变量
-	viper.BindPFlag("user", rootCmd.PersistentFlags().Lookup("user"))
+	viper.BindPFlag("account", rootCmd.PersistentFlags().Lookup("account"))
 	viper.BindPFlag("password", rootCmd.PersistentFlags().Lookup("password"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	fmt.Println("cfgFile:" + cfgFile)
 	if cfgFile != "" {
-		fmt.Println(cfgFile)
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {

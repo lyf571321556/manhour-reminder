@@ -13,10 +13,10 @@ var wechatbot map[string]api.QiyeWechatBot
 
 func InitBot() {
 	wechatbot = make(map[string]api.QiyeWechatBot, 0)
-	for _, botInfo := range config.AppConfig.BotList {
-		bot := bot.NewQiyeWechatBot(botInfo.BotKey)
+	for _, botInfo := range config.AppConfig.RobotList {
+		bot := bot.NewQiyeWechatBot(botInfo.RobotKey)
 		api.SetDebug(true)
-		wechatbot[botInfo.BotKey] = bot
+		wechatbot[botInfo.RobotKey] = bot
 	}
 }
 

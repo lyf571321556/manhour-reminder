@@ -12,16 +12,16 @@ const (
 )
 
 type Config struct {
-	OnesProjectUrl string    `yaml:"ones_project_url"`
-	TeamUUID       string    `yaml:"team_uuid"`
-	MsgContent     string    `yaml:"msg_content"`
-	TaskCrontab    string    `yaml:"task_crontab"`
-	BotList        []BotInfo `yaml:"bot_list"`
+	OnesProjectUrl string      `yaml:"ones_project_url"`
+	TeamUUID       string      `yaml:"team_uuid"`
+	MsgContent     string      `yaml:"msg_content"`
+	TaskCrontab    string      `yaml:"task_crontab"`
+	RobotList      []RobotInfo `yaml:"robot_list"`
 }
 
-type BotInfo struct {
-	BotName        string        `yaml:"bot_name"`
-	BotKey         string        `yaml:"bot_key"`
+type RobotInfo struct {
+	RobotName      string        `yaml:"robot_name"`
+	RobotKey       string        `yaml:"robot_key"`
 	DepartmentUUID string        `yaml:"department_uuid"`
 	UserMappings   []UserMapping `yaml:"user_mappings"`
 }
@@ -37,8 +37,11 @@ func (config *Config) toString() string {
 
 var AppConfig Config
 
-func Init() {
-	yamlFile, err := ioutil.ReadFile(defaultConfigPath)
+func Init(configPath string) {
+	if configPath == "" {
+		configPath = defaultConfigPath
+	}
+	yamlFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		fmt.Printf("failed to read yaml file : %v\n", err)
 		return
