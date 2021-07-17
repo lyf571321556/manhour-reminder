@@ -62,10 +62,8 @@ func startServer(user string, password string) {
 	c := cron.New(cron.WithParser(cron.NewParser(
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
-	println(config.AppConfig.TaskCrontab)
 	c.AddFunc(config.AppConfig.TaskCrontab, func() {
-		println("运行一次 by" + AppAuth.Email)
-		//go bot.SendMsgToUser(AppAuth)
+		go bot.SendMsgToUser(AppAuth)
 	})
 	c.Start()
 	select {}
