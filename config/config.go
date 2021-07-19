@@ -16,6 +16,8 @@ type Config struct {
 	TeamUUID       string      `yaml:"team_uuid"`
 	MsgContent     string      `yaml:"msg_content"`
 	TaskCrontab    string      `yaml:"task_crontab"`
+	LogPath        string      `yaml:"log_path"`
+	Debug          bool        `yaml:"debug"`
 	RobotList      []RobotInfo `yaml:"robot_list"`
 }
 
@@ -37,19 +39,20 @@ func (config *Config) toString() string {
 
 var AppConfig Config
 
-func Init(configPath string) {
+func Init(configPath string) (err error) {
 	if configPath == "" {
 		configPath = defaultConfigPath
 	}
 	yamlFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		fmt.Printf("failed to read yaml file : %v\n", err)
-		return
+		fmt.Printf("failed to read yaml file : %+v\n", err)
+		return err
 	}
 
 	err = yaml.Unmarshal(yamlFile, &AppConfig)
 	if err != nil {
 		log.Println(err)
-		return
+		return err
 	}
+	return err
 }

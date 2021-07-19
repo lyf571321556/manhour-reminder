@@ -3,9 +3,9 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/lyf571321556/qiye-wechat-bot-api/api"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -108,7 +108,7 @@ func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUU
 
 		dataMap := make(map[string]map[string]interface{})
 		if err = json.Unmarshal(rawResp, &dataMap); err != nil {
-			return fmt.Errorf("parse error: %w\nraw response: %s", err, rawResp)
+			return fmt.Errorf("parse error: %+v\nraw response: %s", err, rawResp)
 		}
 		buckets := dataMap["data"]["buckets"]
 		if bucketsMapList, ok := buckets.([]interface{}); ok {
@@ -116,12 +116,13 @@ func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUU
 				var manhourInfo ManhourInfo
 				bytes, err := json.Marshal(bucket)
 				if err != nil {
-					log.Println(err)
+					log.Error(err.Error())
 					continue
 				}
 				err = json.Unmarshal(bytes, &manhourInfo)
 				if err != nil {
-					log.Println(err)
+					log.Error(err.Error())
+					log.Error(err.Error())
 					continue
 				}
 				userUUIDToManhoutMap[manhourInfo.User.UUID] = manhourInfo

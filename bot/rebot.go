@@ -1,12 +1,13 @@
 package bot
 
 import (
+	"fmt"
 	"github.com/lyf571321556/manhour-reminder/config"
+	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/lyf571321556/manhour-reminder/service"
 	"github.com/lyf571321556/qiye-wechat-bot-api/api"
 	"github.com/lyf571321556/qiye-wechat-bot-api/bot"
 	"github.com/lyf571321556/qiye-wechat-bot-api/text"
-	"log"
 )
 
 var wechatbot map[string]api.QiyeWechatBot
@@ -23,7 +24,7 @@ func InitBot() {
 func SendMsgToUser(auth service.AuthInfo) (err error) {
 	list, err := service.FetchNeedToRemindUserlist(auth)
 	if err != nil {
-		log.Printf("fetchNeedToRemindUserlist error:%w\n", err)
+		log.Error(fmt.Sprintf("fetchNeedToRemindUserlist error:%+v\n", err))
 		return err
 	}
 
@@ -32,18 +33,16 @@ func SendMsgToUser(auth service.AuthInfo) (err error) {
 		if !ok {
 			continue
 		}
-		log.Printf("start send msg to %s\n", botKey)
+		log.Info(fmt.Sprintf("start send msg to %s\n", botKey))
 		textMsgOption := make([]text.TextMsgOption, 0)
-		//var content bytes.Buffer
 		for _, user := range userList {
 			textMsgOption = append(textMsgOption, text.MentionByUserid(user.WechatUUID))
-			//content.WriteString(fmt.Sprintf("%s,记得登记工时.\n", user.UserName))
 		}
 		err = robot.PushTextMessage(
 			config.AppConfig.MsgContent, textMsgOption...,
 		)
 		if err != nil {
-			log.Printf("send msg to bot(%s) error:%w\n", botKey, err)
+			log.Error(fmt.Sprintf("send msg to bot(%s) error:%+v\n", botKey, err))
 		}
 	}
 

@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/lyf571321556/manhour-reminder/bot"
+	"github.com/lyf571321556/manhour-reminder/config"
+	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/spf13/cobra"
 	"os"
 
-	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -18,6 +20,9 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
+	if log.Logger != nil {
+		defer log.Logger.Sync()
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -43,14 +48,15 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Find home directory.
-		home, err := homedir.Dir()
+		//home, err := homedir.Dir()
+		currentPath, err := os.Getwd()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".manhour-reminder" (without extension).
-		viper.AddConfigPath(home)
+		// Search config in current directory with name "cofnig" (without extension).
+		viper.AddConfigPath(currentPath + "/config")
 		viper.SetConfigName("config")
 	}
 
@@ -60,4 +66,14 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
+	if err := config.Init(viper.ConfigFileUsed()); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if err := log.InitLog(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	bot.InitBot()
 }

@@ -1,9 +1,11 @@
 ones_project_url: "https://api.ones.ai/project/v1"
+log_path: "./reminder.log"
+debug: false
 account: "wuxingjuan@ones.ai"
 password: "juan1997"
 team_uuid: "RDjYMhKq"
 msg_content: "请以下人员记得登记工时。\n"
-task_crontab: "0/5 * * ? * *"
+task_crontab: "0 0/1 16 * * MON-FRI"
 robot_list:
   - robot_name: "工时机器人"
     robot_key: "d61a6d1d-64b8-49ef-a89e-a705829fc311"

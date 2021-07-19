@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 	"github.com/lyf571321556/manhour-reminder/config"
-	"log"
+	"github.com/lyf571321556/manhour-reminder/log"
 )
 
 func FetchNeedToRemindUserlist(auth AuthInfo) (list map[string][]UserInfo, err error) {
@@ -11,7 +11,7 @@ func FetchNeedToRemindUserlist(auth AuthInfo) (list map[string][]UserInfo, err e
 	for _, botInfo := range config.AppConfig.RobotList {
 		reminedUserInBot, err := fetchNeedRemidedUserInBot(auth, botInfo)
 		if err != nil {
-			log.Printf("Bot(%s-%s) occur error:%w\n", botInfo.RobotKey, botInfo.RobotName, err)
+			log.Error(fmt.Sprintf("Bot(%s-%s) occur error:%+v\n", botInfo.RobotKey, botInfo.RobotName, err))
 			continue
 		}
 		if len(reminedUserInBot) > 0 {

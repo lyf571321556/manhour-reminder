@@ -47,7 +47,7 @@ func Login(url, username, password string) (user AuthInfo, err error) {
 			return fmt.Errorf("error:%s", string(rawResp))
 		}
 		if err = json.Unmarshal(rawResp, loginInfo); err != nil {
-			return fmt.Errorf("unknown response: %w\nraw response: %s", err, rawResp)
+			return fmt.Errorf("unknown response: %+v\nraw response: %s", err, rawResp)
 		}
 		return nil
 	})

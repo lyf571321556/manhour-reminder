@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"os/exec"
@@ -14,7 +15,7 @@ var stopCmd = &cobra.Command{
 		strb, _ := ioutil.ReadFile(".pid.lock")
 		command := exec.Command("kill", string(strb))
 		command.Start()
-		println("service stopped...")
+		log.Info("service stopped...")
 	},
 }
 
