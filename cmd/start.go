@@ -17,8 +17,8 @@ import (
 
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "start man-hour rebot.",
-	Long:  `start man-hour rebot.`,
+	Short: "start man-hour robot.",
+	Long:  `start man-hour robot.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		daemon, _ := cmd.Flags().GetBool("daemon")
 		configPath, _ := cmd.Flags().GetString("config")

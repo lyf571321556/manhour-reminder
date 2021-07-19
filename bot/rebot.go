@@ -28,7 +28,7 @@ func SendMsgToUser(auth service.AuthInfo) (err error) {
 	}
 
 	for botKey, userList := range list {
-		rebot, ok := wechatbot[botKey]
+		robot, ok := wechatbot[botKey]
 		if !ok {
 			continue
 		}
@@ -39,7 +39,7 @@ func SendMsgToUser(auth service.AuthInfo) (err error) {
 			textMsgOption = append(textMsgOption, text.MentionByUserid(user.WechatUUID))
 			//content.WriteString(fmt.Sprintf("%s,记得登记工时.\n", user.UserName))
 		}
-		err = rebot.PushTextMessage(
+		err = robot.PushTextMessage(
 			config.AppConfig.MsgContent, textMsgOption...,
 		)
 		if err != nil {

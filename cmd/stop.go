@@ -8,8 +8,8 @@ import (
 
 var stopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "stop man-hour rebot.",
-	Long:  `stop man-hour rebot.`,
+	Short: "stop man-hour robot.",
+	Long:  `stop man-hour robot.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		strb, _ := ioutil.ReadFile(".pid.lock")
 		command := exec.Command("kill", string(strb))

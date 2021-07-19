@@ -7,7 +7,7 @@ import (
 )
 
 func init() {
-	log.SetPrefix("Rebot: ")
+	log.SetPrefix("Robot: ")
 	log.SetFlags(log.Ldate | log.Lmicroseconds | log.Llongfile)
 }
 
