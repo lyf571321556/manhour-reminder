@@ -26,7 +26,7 @@ var startCmd = &cobra.Command{
 		user := viper.GetString("account")
 		password := viper.GetString("password")
 		if daemon {
-			command := exec.Command("./manhour-reminder", "start", fmt.Sprintf("-u=%s", user), fmt.Sprintf("-p=%s", password)) //go run main.go start
+			command := exec.Command("./manhour-reminder", fmt.Sprintf("--config=%s", viper.ConfigFileUsed()), "start", fmt.Sprintf("-a=%s", user), fmt.Sprintf("-p=%s", password)) //go run main.go start
 			command.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Foreground: false}
 			command.Stdout = os.Stdout
 			command.Stdin = os.Stdin
@@ -49,6 +49,15 @@ func init() {
 }
 
 func startServer(user string, password string) {
+	if err := conf.Init(viper.ConfigFileUsed()); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	if err := log.InitLog(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	bot.InitBot()
 	//获取token
 	loginUrl := fmt.Sprintf("%s%s", conf.AppConfig.OnesProjectUrl, service.AUTH_LOGIN)
 	AppAuth, err := service.Login(loginUrl, user, password)

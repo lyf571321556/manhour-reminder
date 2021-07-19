@@ -2,8 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lyf571321556/manhour-reminder/bot"
-	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/spf13/cobra"
 	"os"
@@ -39,6 +37,7 @@ func init() {
 	//通过配置文件绑定变量
 	viper.BindPFlag("account", rootCmd.PersistentFlags().Lookup("account"))
 	viper.BindPFlag("password", rootCmd.PersistentFlags().Lookup("password"))
+	viper.BindPFlag("daemon", rootCmd.PersistentFlags().Lookup("daemon"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -63,17 +62,9 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	err := viper.ReadInConfig()
+	daemon := viper.GetBool("daemon")
+	if err == nil && daemon {
+		fmt.Println("current config file is:", viper.ConfigFileUsed())
 	}
-
-	if err := conf.Init(viper.ConfigFileUsed()); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	if err := log.InitLog(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	bot.InitBot()
 }
