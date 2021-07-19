@@ -1,6 +1,6 @@
 ones_project_url: "https://api.ones.ai/project/v1"
 log_path: "./reminder.log"
-debug: false
+debug: true
 account: "wuxingjuan@ones.ai"
 password: "juan1997"
 team_uuid: "RDjYMhKq"
