@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/lyf571321556/manhour-reminder/bot"
-	"github.com/lyf571321556/manhour-reminder/config"
+	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/lyf571321556/manhour-reminder/service"
 	"github.com/robfig/cron/v3"
@@ -50,7 +50,7 @@ func init() {
 
 func startServer(user string, password string) {
 	//获取token
-	loginUrl := fmt.Sprintf("%s%s", config.AppConfig.OnesProjectUrl, service.AUTH_LOGIN)
+	loginUrl := fmt.Sprintf("%s%s", conf.AppConfig.OnesProjectUrl, service.AUTH_LOGIN)
 	AppAuth, err := service.Login(loginUrl, user, password)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -60,7 +60,7 @@ func startServer(user string, password string) {
 	c := cron.New(cron.WithParser(cron.NewParser(
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
-	c.AddFunc(config.AppConfig.TaskCrontab, func() {
+	c.AddFunc(conf.AppConfig.TaskCrontab, func() {
 		go bot.SendMsgToUser(AppAuth)
 	})
 	c.Start()

@@ -2,7 +2,7 @@ package bot
 
 import (
 	"fmt"
-	"github.com/lyf571321556/manhour-reminder/config"
+	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/lyf571321556/manhour-reminder/service"
 	"github.com/lyf571321556/qiye-wechat-bot-api/api"
@@ -14,7 +14,7 @@ var wechatbot map[string]api.QiyeWechatBot
 
 func InitBot() {
 	wechatbot = make(map[string]api.QiyeWechatBot, 0)
-	for _, botInfo := range config.AppConfig.RobotList {
+	for _, botInfo := range conf.AppConfig.RobotList {
 		bot := bot.NewQiyeWechatBot(botInfo.RobotKey)
 		api.SetDebug(true)
 		wechatbot[botInfo.RobotKey] = bot
@@ -39,7 +39,7 @@ func SendMsgToUser(auth service.AuthInfo) (err error) {
 			textMsgOption = append(textMsgOption, text.MentionByUserid(user.WechatUUID))
 		}
 		err = robot.PushTextMessage(
-			config.AppConfig.MsgContent, textMsgOption...,
+			conf.AppConfig.MsgContent, textMsgOption...,
 		)
 		if err != nil {
 			log.Error(fmt.Sprintf("send msg to bot(%s) error:%+v\n", botKey, err))

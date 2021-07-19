@@ -1,7 +1,7 @@
 package log
 
 import (
-	"github.com/lyf571321556/manhour-reminder/config"
+	"github.com/lyf571321556/manhour-reminder/conf"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -12,15 +12,15 @@ var (
 
 func InitLog() (err error) {
 	logLevel := zap.InfoLevel
-	if config.AppConfig.Debug {
+	if conf.AppConfig.Debug {
 		logLevel = zap.DebugLevel
 	}
 	zap.NewDevelopmentConfig()
 	zapConfig := zap.Config{
 		Encoding:    "json",
 		Level:       zap.NewAtomicLevelAt(logLevel),
-		Development: config.AppConfig.Debug,
-		OutputPaths: []string{"stdout", config.AppConfig.LogPath},
+		Development: conf.AppConfig.Debug,
+		OutputPaths: []string{"stdout", conf.AppConfig.LogPath},
 		EncoderConfig: zapcore.EncoderConfig{
 			MessageKey:   "message",
 			LevelKey:     "level",

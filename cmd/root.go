@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/lyf571321556/manhour-reminder/bot"
-	"github.com/lyf571321556/manhour-reminder/config"
+	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/spf13/cobra"
 	"os"
@@ -31,7 +31,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./config/config.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./conf/config.yaml)")
 	rootCmd.PersistentFlags().BoolP("daemon", "d", false, "service run on background?")
 	rootCmd.PersistentFlags().StringP("account", "a", "", "ONES的用户名")
 	rootCmd.PersistentFlags().StringP("password", "p", "", "ONES的密码")
@@ -56,7 +56,7 @@ func initConfig() {
 		}
 
 		// Search config in current directory with name "cofnig" (without extension).
-		viper.AddConfigPath(currentPath + "/config")
+		viper.AddConfigPath(currentPath + "/conf")
 		viper.SetConfigName("config")
 	}
 
@@ -67,7 +67,7 @@ func initConfig() {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 
-	if err := config.Init(viper.ConfigFileUsed()); err != nil {
+	if err := conf.Init(viper.ConfigFileUsed()); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
