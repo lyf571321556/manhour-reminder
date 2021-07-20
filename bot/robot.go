@@ -12,23 +12,29 @@ import (
 
 var wechatbot map[string]api.QiyeWechatBot
 
-func InitBot() {
+func InitBot(configPath string) (err error) {
+	err = conf.Init(configPath)
+	if err != nil {
+		return err
+	}
+	err = log.InitLog()
+	if err != nil {
+		return err
+	}
 	wechatbot = make(map[string]api.QiyeWechatBot, 0)
 	for _, botInfo := range conf.AppConfig.RobotList {
 		bot := bot.NewQiyeWechatBot(botInfo.RobotKey)
 		api.SetDebug(true)
 		wechatbot[botInfo.RobotKey] = bot
 	}
+	return err
 }
 
-func SendMsgToUser(auth service.AuthInfo) (err error) {
-	list, err := service.FetchNeedToRemindUserlist(auth)
-	if err != nil {
-		log.Error(fmt.Sprintf("fetchNeedToRemindUserlist error:%+v\n", err))
+func SendMsgToUser(robotToRemindedUers map[string][]service.UserInfo) (err error) {
+	if robotToRemindedUers == nil {
 		return err
 	}
-
-	for botKey, userList := range list {
+	for botKey, userList := range robotToRemindedUers {
 		robot, ok := wechatbot[botKey]
 		if !ok {
 			continue

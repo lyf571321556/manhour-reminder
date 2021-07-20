@@ -49,15 +49,10 @@ func init() {
 }
 
 func startServer(user string, password string) {
-	if err := conf.Init(viper.ConfigFileUsed()); err != nil {
+	if err := bot.InitBot(viper.ConfigFileUsed()); err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return
 	}
-	if err := log.InitLog(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	bot.InitBot()
 	//获取token
 	loginUrl := fmt.Sprintf("%s%s", conf.AppConfig.OnesProjectUrl, service.AUTH_LOGIN)
 	AppAuth, err := service.Login(loginUrl, user, password)
@@ -70,8 +65,19 @@ func startServer(user string, password string) {
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
 	c.AddFunc(conf.AppConfig.TaskCrontab, func() {
-		go bot.SendMsgToUser(AppAuth)
+		go remindUserOnceAgain(AppAuth)
 	})
 	c.Start()
 	select {}
+}
+
+func remindUserOnceAgain(auth service.AuthInfo) (err error) {
+	list, err := service.FetchNeedToRemindUserlist(auth)
+	if err != nil {
+		log.Error(fmt.Sprintf("fetchNeedToRemindUserlist error:%+v\n", err))
+	}
+	if len(list) > 0 {
+		err = bot.SendMsgToUser(list)
+	}
+	return err
 }

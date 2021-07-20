@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	defaultConfigPath = "config/config.yaml"
+	defaultConfigPath = "conf/config.yaml"
 )
 
 type Config struct {
