@@ -4,8 +4,7 @@ debug: true
 account: "wuxingjuan@ones.ai"
 password: "juan1997"
 team_uuid: "RDjYMhKq"
-msg_content: "请以下人员记得登记工时。\n"
-task_crontab: "0 0/1 22 * * MON-FRI"
+task_crontab: "0/1 * 21 * * MON-FRI"
 robot_list:
   - robot_name: "工时机器人"
     robot_key: "d61a6d1d-64b8-49ef-a89e-a705829fc311"

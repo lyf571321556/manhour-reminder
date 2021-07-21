@@ -14,7 +14,6 @@ const (
 type Config struct {
 	OnesProjectUrl string      `yaml:"ones_project_url"`
 	TeamUUID       string      `yaml:"team_uuid"`
-	MsgContent     string      `yaml:"msg_content"`
 	TaskCrontab    string      `yaml:"task_crontab"`
 	LogPath        string      `yaml:"log_path"`
 	Debug          bool        `yaml:"debug"`

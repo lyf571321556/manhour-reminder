@@ -4,25 +4,27 @@ import (
 	"fmt"
 	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/log"
+	"time"
 )
 
-func FetchNeedToRemindUserlist(auth AuthInfo) (list map[string][]UserInfo, err error) {
-	list = make(map[string][]UserInfo, 0)
+func FetchNeedToRemindUserlist(auth AuthInfo) (list map[string][]*ManhourInfo, err error) {
+	list = make(map[string][]*ManhourInfo, 0)
 	for _, botInfo := range conf.AppConfig.RobotList {
-		reminedUserInBot, err := fetchNeedRemidedUserInBot(auth, botInfo)
+		UserManhoursInBot, err := fetchUserManhoursInBot(auth, botInfo)
 		if err != nil {
 			log.Error(fmt.Sprintf("Bot(%s-%s) occur error:%+v\n", botInfo.RobotKey, botInfo.RobotName, err))
 			continue
 		}
-		if len(reminedUserInBot) > 0 {
-			list[botInfo.RobotKey] = reminedUserInBot
+		var manhours []*ManhourInfo = make([]*ManhourInfo, 0)
+		for _, manhour := range UserManhoursInBot {
+			manhours = append(manhours, manhour)
 		}
+		list[botInfo.RobotKey] = manhours
 	}
 	return list, err
 }
 
-func fetchNeedRemidedUserInBot(auth AuthInfo, robotinfo conf.RobotInfo) (reminedUserInBot []UserInfo, err error) {
-	reminedUserInBot = make([]UserInfo, 0)
+func fetchUserManhoursInBot(auth AuthInfo, robotinfo conf.RobotInfo) (userUUIDToManhoutMap map[string]*ManhourInfo, err error) {
 	fetchManhourUrl := fmt.Sprintf("%s%s", conf.AppConfig.OnesProjectUrl, fmt.Sprintf(ITEMS_GQL, conf.AppConfig.TeamUUID))
 	departmentUUID := robotinfo.DepartmentUUID
 	userUUIDs := make([]string, 0)
@@ -34,14 +36,19 @@ func fetchNeedRemidedUserInBot(auth AuthInfo, robotinfo conf.RobotInfo) (remined
 
 	manhourMapping, err := FetchManhourByUUIDAndDepartmentUUID(fetchManhourUrl, auth, departmentUUID, userUUIDs)
 	if err != nil {
-		return reminedUserInBot, err
+		return manhourMapping, err
 	}
-
+	t := time.Now()
+	currentDate := t.Format("2006-01-02")
 	for _, manhourinfo := range manhourMapping {
-		if manhourinfo.getActualHours() < 8 {
-			manhourinfo.User.WechatUUID = onesUserIdToWechatUserIdMapping[manhourinfo.User.UUID]
-			reminedUserInBot = append(reminedUserInBot, manhourinfo.User)
+		times := manhourinfo.ActualHoursSeries.Times
+		values := manhourinfo.ActualHoursSeries.Values
+		for index, time := range times {
+			if time == currentDate && values[index] == 0 {
+				manhourinfo.User.WechatUUID = onesUserIdToWechatUserIdMapping[manhourinfo.User.UUID]
+				manhourinfo.User.Reminded = true
+			}
 		}
 	}
-	return reminedUserInBot, err
+	return manhourMapping, err
 }

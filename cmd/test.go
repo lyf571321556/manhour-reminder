@@ -5,6 +5,7 @@ import (
 	"github.com/lyf571321556/manhour-reminder/bot"
 	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/service"
+	"github.com/lyf571321556/qiye-wechat-bot-api/text"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"log"
@@ -60,6 +61,20 @@ func testServer(user string, password string) (err error) {
 
 	}
 
-	err = bot.SendMsgToUser(testRobotToRemindedUers)
+	for botKey, userList := range testRobotToRemindedUers {
+		robot, ok := bot.Wechatbot[botKey]
+		if !ok {
+			continue
+		}
+		textMsgOption := make([]text.TextMsgOption, 0)
+		for _, user := range userList {
+			textMsgOption = append(textMsgOption, text.MentionByUserid(user.WechatUUID))
+		}
+		err = robot.PushTextMessage("测试信息,请以下人员及时登记工时.", textMsgOption...,
+		)
+		if err != nil {
+			return err
+		}
+	}
 	return err
 }

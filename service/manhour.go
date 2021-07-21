@@ -10,14 +10,21 @@ import (
 )
 
 type ManhourInfo struct {
-	ActualHours int64    `json:"actualHours"`
-	User        UserInfo `json:"columnField"`
+	ActualHours       int64                 `json:"actualHours"`
+	User              UserInfo              `json:"columnField"`
+	ActualHoursSeries ActualHoursSeriesInfo `json:"actualHoursSeries"`
+}
+
+type ActualHoursSeriesInfo struct {
+	Times  []string  `json:"times"`
+	Values []float64 `json:"values"`
 }
 
 type UserInfo struct {
 	UUID       string `json:"uuid"`
 	UserName   string `json:"name"`
 	WechatUUID string `json:"wechat_uuid"`
+	Reminded   bool
 }
 
 func (manhourinfo *ManhourInfo) getActualHours() int64 {
@@ -60,13 +67,13 @@ func generateGqlForManhour(userids []string, departmentUUID string) interface{} 
 				"timeField":  "users.manhours.startTime",
 				"valueField": "users.manhours.hours",
 				"unit":       "day",
-				"quick":      "today",
+				"quick":      "this_week",
 			},
 			"timeSeriesWithWorkDays": map[string]interface{}{
 				"timeField":  "users.manhours.startTime",
 				"valueField": "users.manhours.hours",
 				"unit":       "day",
-				"quick":      "today",
+				"quick":      "this_week",
 				"constant":   800000,
 				"workdays": []string{
 					"Mon",
@@ -83,7 +90,7 @@ func generateGqlForManhour(userids []string, departmentUUID string) interface{} 
 	return qglQuery
 }
 
-func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUUID string, userUUIDS []string) (userUUIDToManhoutMap map[string]ManhourInfo, err error) {
+func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUUID string, userUUIDS []string) (userUUIDToManhoutMap map[string]*ManhourInfo, err error) {
 	manhourGql := generateGqlForManhour(userUUIDS, departmentUUID)
 	var gqlJson []byte
 	if gqlJson, err = json.Marshal(manhourGql); err != nil {
@@ -96,7 +103,7 @@ func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUU
 
 	request.Header.Add("Ones-User-Id", auth.UserId)
 	request.Header.Add("Ones-Auth-Token", auth.Token)
-	userUUIDToManhoutMap = make(map[string]ManhourInfo, 0)
+	userUUIDToManhoutMap = make(map[string]*ManhourInfo, 0)
 	_, err = api.ExecuteHTTP(request, func(resp *http.Response) error {
 		rawResp, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
@@ -113,13 +120,13 @@ func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUU
 		buckets := dataMap["data"]["buckets"]
 		if bucketsMapList, ok := buckets.([]interface{}); ok {
 			for _, bucket := range bucketsMapList {
-				var manhourInfo ManhourInfo
+				var manhourInfo = new(ManhourInfo)
 				bytes, err := json.Marshal(bucket)
 				if err != nil {
 					log.Error(err.Error())
 					continue
 				}
-				err = json.Unmarshal(bytes, &manhourInfo)
+				err = json.Unmarshal(bytes, manhourInfo)
 				if err != nil {
 					log.Error(err.Error())
 					log.Error(err.Error())
