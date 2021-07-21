@@ -6,7 +6,7 @@
 
 ***go mod tidy***
 
-## 交叉编译时注入变量值(在main中定义的变量通过-X main.var_name=value,在其他文件下)
+## 交叉编译时注入变量值(在main包中定义的变量通过-X main.var_name=value,在其他包下的变量通过-X package_path.variable_name=value)
 
 go build -ldflags "-X main.Time=value -X main.User=value -X package_path.variable_name=value" -0 outputfile main.go
 
