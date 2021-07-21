@@ -41,11 +41,11 @@ func fetchUserManhoursInBot(auth AuthInfo, robotinfo conf.RobotInfo) (userUUIDTo
 	t := time.Now()
 	currentDate := t.Format("2006-01-02")
 	for _, manhourinfo := range manhourMapping {
+		manhourinfo.User.WechatUUID = onesUserIdToWechatUserIdMapping[manhourinfo.User.UUID]
 		times := manhourinfo.ActualHoursSeries.Times
 		values := manhourinfo.ActualHoursSeries.Values
 		for index, time := range times {
 			if time == currentDate && values[index] == 0 {
-				manhourinfo.User.WechatUUID = onesUserIdToWechatUserIdMapping[manhourinfo.User.UUID]
 				manhourinfo.User.Reminded = true
 			}
 		}

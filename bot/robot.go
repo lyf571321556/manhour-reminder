@@ -70,7 +70,7 @@ func SendMsgToUser(uerMahoursInRobot map[string][]*service.ManhourInfo) (err err
 		}
 		textMsgOption := make([]text.TextMsgOption, 0)
 		if len(remindedUsers) > 0 {
-			msgManhoursTableContent.WriteString("以下人员还未登记工时，请及时补充工时信息。")
+			msgManhoursTableContent.WriteString("以下人员今天还未登记工时，请及时补充工时信息。")
 		}
 		for _, user := range remindedUsers {
 			textMsgOption = append(textMsgOption, text.MentionByUserid(user.WechatUUID))

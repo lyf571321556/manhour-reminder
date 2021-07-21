@@ -70,7 +70,7 @@ func testServer(user string, password string) (err error) {
 		for _, user := range userList {
 			textMsgOption = append(textMsgOption, text.MentionByUserid(user.WechatUUID))
 		}
-		err = robot.PushTextMessage("测试信息,请以下人员及时登记工时.", textMsgOption...,
+		err = robot.PushTextMessage("测试信息\n\t请以下人员及时登记工时.", textMsgOption...,
 		)
 		if err != nil {
 			return err

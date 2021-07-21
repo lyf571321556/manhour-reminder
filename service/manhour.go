@@ -129,7 +129,6 @@ func FetchManhourByUUIDAndDepartmentUUID(url string, auth AuthInfo, departmentUU
 				err = json.Unmarshal(bytes, manhourInfo)
 				if err != nil {
 					log.Error(err.Error())
-					log.Error(err.Error())
 					continue
 				}
 				userUUIDToManhoutMap[manhourInfo.User.UUID] = manhourInfo
