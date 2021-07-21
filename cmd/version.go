@@ -16,6 +16,6 @@ var showVersion = &cobra.Command{
 	Short: "show version for manhour-robot",
 	Long:  "show version for manhour-robot",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("build.Version:\t", Version)
+		fmt.Println("Build.Version:\t", Version)
 	},
 }
