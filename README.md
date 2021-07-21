@@ -25,5 +25,5 @@ go build -ldflags "-X main.Time=value -X main.User=value -X package_path.variabl
 > ***181bc50 B github.com/lyf571321556/manhour-reminder/cmd.Version***
 
 3. 找到定义的Version变量的package_path，然后再次编译的时候注入变量值   
-   go build -ldflags "-X main.Time=value -X main.User=value -X
+   go build -ldflags "-X 'main.Time=${date}' -X 'main.User=${id -u -n}' -X
    github.com/lyf571321556/manhour-reminder/cmd.Version=v1.0.2"  -o manhour-reminder   
