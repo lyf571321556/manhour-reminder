@@ -2,11 +2,13 @@ package main
 
 import (
 	"github.com/lyf571321556/manhour-reminder/cmd"
-	"github.com/lyf571321556/manhour-reminder/service"
 )
 
-var AppAuth service.AuthInfo
+var (
+	version string
+)
 
 func main() {
+	cmd.Version = version
 	cmd.Execute()
 }
