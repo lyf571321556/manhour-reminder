@@ -1,14 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"github.com/lyf571321556/manhour-reminder/cmd"
 )
 
 var (
-	version string
+	Time string
+	User string
 )
 
 func main() {
-	cmd.Version = version
+	fmt.Println("build.Time:\t", Time)
+	fmt.Println("build.User:\t", User)
 	cmd.Execute()
 }

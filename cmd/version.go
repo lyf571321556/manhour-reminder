@@ -8,14 +8,14 @@ import (
 var Version string
 
 func init() {
-	rootCmd.AddCommand(version)
+	rootCmd.AddCommand(showVersion)
 }
 
-var version = &cobra.Command{
+var showVersion = &cobra.Command{
 	Use:   "version",
 	Short: "show version for manhour-robot",
 	Long:  "show version for manhour-robot",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(Version)
+		fmt.Println("build.Version:\t", Version)
 	},
 }
