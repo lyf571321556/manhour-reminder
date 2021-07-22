@@ -42,6 +42,7 @@ func Init(configPath string) (err error) {
 	if configPath == "" {
 		configPath = defaultConfigPath
 	}
+	fmt.Println("current config file is:", configPath)
 	yamlFile, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		fmt.Printf("failed to read yaml file : %+v\n", err)

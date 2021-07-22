@@ -1,4 +1,4 @@
-# manhour-reminder
+# manhour-robot
 
 ## 工程构建相关
 
@@ -12,9 +12,9 @@ go build -ldflags "-X main.Time=value -X main.User=value -X package_path.variabl
 
 ## 查询变量所在的package_path,分别执行一下命令
 
-1. go build -o manhour-reminder,编译出二进制可执行文件
+1. go build -o manhour-robot,编译出二进制可执行文件
 
-2. go tool nm ./manhour-reminder | grep manhour-reminder 查找定义变量所在package_path,输出如下：
+2. go tool nm ./manhour-robot | grep manhour-robot 查找定义变量所在package_path,输出如下：
 
 > 17d9aa0 D github.com/lyf571321556/manhour-reminder/bot..inittask   
 > 142f9e0 T github.com/lyf571321556/manhour-reminder/bot.InitBot   
@@ -25,5 +25,5 @@ go build -ldflags "-X main.Time=value -X main.User=value -X package_path.variabl
 > ***181bc50 B github.com/lyf571321556/manhour-reminder/cmd.Version***
 
 3. 找到定义的Version变量的package_path，然后再次编译的时候注入变量值   
-   go build -ldflags "-X 'main.Time=${date}' -X 'main.User=${id -u -n}' -X
-   github.com/lyf571321556/manhour-reminder/cmd.Version=v1.0.2"  -o manhour-reminder   
+   go build -ldflags "-X 'main.time=${date}' -X 'main.user=${id -u -n}' -X
+   github.com/lyf571321556/manhour-reminder/cmd.version=v1.0.2"  -o manhour-robot   

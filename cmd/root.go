@@ -62,9 +62,5 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	err := viper.ReadInConfig()
-	daemon := viper.GetBool("daemon")
-	if err == nil && !daemon {
-		fmt.Println("current config file is:", viper.ConfigFileUsed())
-	}
+	_ = viper.ReadInConfig()
 }

@@ -5,7 +5,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Version string
+var version string
+var Time string
+var User string
 
 func init() {
 	rootCmd.AddCommand(showVersion)
@@ -16,6 +18,8 @@ var showVersion = &cobra.Command{
 	Short: "show version for manhour-robot",
 	Long:  "show version for manhour-robot",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Build Version:\t", Version)
+		fmt.Println("Build Time:\t", Time)
+		fmt.Println("Build User:\t", User)
+		fmt.Println("Build Version:\t", version)
 	},
 }
