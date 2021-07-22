@@ -11,7 +11,7 @@ var (
 )
 
 func main() {
-	fmt.Println("Build.Time:\t", Time)
-	fmt.Println("Build.User:\t", User)
+	fmt.Println("Build Time:\t", Time)
+	fmt.Println("Build User:\t", User)
 	cmd.Execute()
 }
