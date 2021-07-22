@@ -12,15 +12,19 @@ var (
 
 func InitLog() (err error) {
 	logLevel := zap.InfoLevel
+	outputPaths := make([]string, 0)
 	if conf.AppConfig.Debug {
 		logLevel = zap.DebugLevel
+		outputPaths = append(outputPaths, "stdout")
+	} else {
+		outputPaths = append(outputPaths, conf.AppConfig.LogPath)
 	}
 	zap.NewDevelopmentConfig()
 	zapConfig := zap.Config{
 		Encoding:    "json",
 		Level:       zap.NewAtomicLevelAt(logLevel),
 		Development: conf.AppConfig.Debug,
-		OutputPaths: []string{"stdout", conf.AppConfig.LogPath},
+		OutputPaths: outputPaths,
 		EncoderConfig: zapcore.EncoderConfig{
 			MessageKey:   "message",
 			LevelKey:     "level",
