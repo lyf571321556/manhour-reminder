@@ -67,13 +67,13 @@ func generateGqlForManhour(userids []string, departmentUUID string) interface{} 
 				"timeField":  "users.manhours.startTime",
 				"valueField": "users.manhours.hours",
 				"unit":       "day",
-				"quick":      "this_week",
+				"quick":      "last_7_days",
 			},
 			"timeSeriesWithWorkDays": map[string]interface{}{
 				"timeField":  "users.manhours.startTime",
 				"valueField": "users.manhours.hours",
 				"unit":       "day",
-				"quick":      "this_week",
+				"quick":      "last_7_days",
 				"constant":   800000,
 				"workdays": []string{
 					"Mon",

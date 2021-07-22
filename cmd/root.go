@@ -12,7 +12,7 @@ import (
 var cfgFile string
 
 var rootCmd = &cobra.Command{
-	Use:   "manhour-reminder",
+	Use:   "manhour-robot",
 	Short: "",
 	Long:  ``,
 }
@@ -30,7 +30,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is ./conf/config.yaml)")
-	rootCmd.PersistentFlags().BoolP("daemon", "d", false, "service run on background?")
+	rootCmd.PersistentFlags().BoolP("daemon", "d", false, "service run on background")
 	rootCmd.PersistentFlags().StringP("account", "a", "", "ONES的用户名")
 	rootCmd.PersistentFlags().StringP("password", "p", "", "ONES的密码")
 
@@ -64,7 +64,7 @@ func initConfig() {
 	// If a config file is found, read it in.
 	err := viper.ReadInConfig()
 	daemon := viper.GetBool("daemon")
-	if err == nil && daemon {
+	if err == nil && !daemon {
 		fmt.Println("current config file is:", viper.ConfigFileUsed())
 	}
 }

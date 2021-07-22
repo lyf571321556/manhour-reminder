@@ -6,6 +6,7 @@ import (
 	"github.com/lyf571321556/manhour-reminder/log"
 	"github.com/lyf571321556/manhour-reminder/robot"
 	"github.com/lyf571321556/manhour-reminder/service"
+	"github.com/robfig/cron/v3"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"io/ioutil"
@@ -25,7 +26,7 @@ var startCmd = &cobra.Command{
 		user := viper.GetString("account")
 		password := viper.GetString("password")
 		if daemon {
-			command := exec.Command("./manhour-reminder", fmt.Sprintf("--config=%s", viper.ConfigFileUsed()), "start", fmt.Sprintf("-a=%s", user), fmt.Sprintf("-p=%s", password)) //go run main.go start
+			command := exec.Command("./manhour-robot", fmt.Sprintf("--config=%s", viper.ConfigFileUsed()), "start", fmt.Sprintf("-a=%s", user), fmt.Sprintf("-p=%s", password)) //go run main.go start
 			command.SysProcAttr = &syscall.SysProcAttr{Setpgid: true, Foreground: false}
 			command.Stdout = os.Stdout
 			command.Stdin = os.Stdin
@@ -60,12 +61,12 @@ func startServer(user string, password string) {
 	}
 
 	//支持秒级(可选)的cron表达式
-	//c := cron.New(cron.WithParser(cron.NewParser(
-	//	cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
-	//)))
-	//c.AddFunc(conf.AppConfig.TaskCrontab, func() {
-	robot.StartCheckUsersManhourInEveryRobot(AppAuth)
-	//})
-	//c.Start()
-	//select {}
+	c := cron.New(cron.WithParser(cron.NewParser(
+		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
+	)))
+	c.AddFunc(conf.AppConfig.TaskCrontab, func() {
+		robot.StartCheckUsersManhourInEveryRobot(AppAuth)
+	})
+	c.Start()
+	select {}
 }
