@@ -65,7 +65,7 @@ func startServer(user string, password string) {
 		cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	)))
 	c.AddFunc(conf.AppConfig.TaskCrontab, func() {
-		robot.StartCheckUsersManhourInEveryRobot(AppAuth)
+		go robot.StartCheckUsersManhourInEveryRobot(AppAuth)
 	})
 	c.Start()
 	select {}
