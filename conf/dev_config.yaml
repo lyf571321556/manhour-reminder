@@ -2,7 +2,7 @@ ones_project_url: "https://api.ones.ai/project/v1"
 log_path: "./reminder.log"
 debug: false
 account: "wuxingjuan@ones.ai"
-password: "juan1997"
+password: "juan19971"
 team_uuid: "RDjYMhKq"
 task_crontab: "0 0/1 18 ? * MON-FRI"
 robot_list:
