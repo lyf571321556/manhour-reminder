@@ -4,7 +4,7 @@ debug: true
 account: "wuxingjuan@ones.ai"
 password: "juan1997"
 team_uuid: "RDjYMhKq"
-task_crontab: "0/5 * * * * MON-FRI"
+task_crontab: "0 8/1 14 ? * MON-FRI"
 robot_list:
   - robot_name: "工时机器人"
     robot_key: "d61a6d1d-64b8-49ef-a89e-a705829fc311"
