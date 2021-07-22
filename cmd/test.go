@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lyf571321556/manhour-reminder/bot"
 	"github.com/lyf571321556/manhour-reminder/conf"
+	"github.com/lyf571321556/manhour-reminder/robot"
 	"github.com/lyf571321556/manhour-reminder/service"
 	"github.com/lyf571321556/qiye-wechat-bot-api/text"
 	"github.com/spf13/cobra"
@@ -20,7 +20,7 @@ var test = &cobra.Command{
 	Short: "take a test for Robot",
 	Long:  "take a test for Robot,and send manhour reminded message to all user in config's user mappings.",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := bot.InitBot(viper.ConfigFileUsed()); err != nil {
+		if err := robot.InitBot(viper.ConfigFileUsed()); err != nil {
 			log.Fatal(err.Error())
 			return
 		}
@@ -62,7 +62,7 @@ func testServer(user string, password string) (err error) {
 	}
 
 	for botKey, userList := range testRobotToRemindedUers {
-		robot, ok := bot.Wechatbot[botKey]
+		robot, ok := robot.Wechatbot[botKey]
 		if !ok {
 			continue
 		}

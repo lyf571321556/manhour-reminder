@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lyf571321556/manhour-reminder/bot"
 	"github.com/lyf571321556/manhour-reminder/conf"
 	"github.com/lyf571321556/manhour-reminder/log"
+	"github.com/lyf571321556/manhour-reminder/robot"
 	"github.com/lyf571321556/manhour-reminder/service"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -48,7 +48,7 @@ func init() {
 }
 
 func startServer(user string, password string) {
-	if err := bot.InitBot(viper.ConfigFileUsed()); err != nil {
+	if err := robot.InitBot(viper.ConfigFileUsed()); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -64,19 +64,8 @@ func startServer(user string, password string) {
 	//	cron.SecondOptional | cron.Minute | cron.Hour | cron.Dom | cron.Month | cron.Dow | cron.Descriptor,
 	//)))
 	//c.AddFunc(conf.AppConfig.TaskCrontab, func() {
-	remindUserOnceAgain(AppAuth)
+	robot.StartCheckUsersManhourInEveryRobot(AppAuth)
 	//})
 	//c.Start()
 	//select {}
-}
-
-func remindUserOnceAgain(auth service.AuthInfo) (err error) {
-	list, err := service.FetchNeedToRemindUserlist(auth)
-	if err != nil {
-		log.Error(fmt.Sprintf("fetchNeedToRemindUserlist error:%+v\n", err))
-	}
-	if len(list) > 0 {
-		err = bot.SendMsgToUser(list)
-	}
-	return err
 }
