@@ -26,4 +26,11 @@ go build -ldflags "-X main.Time=value -X main.User=value -X package_path.variabl
 
 3. 找到定义的Version变量的package_path，然后再次编译的时候注入变量值   
    go build -ldflags "-X 'main.time=${date}' -X 'main.user=${id -u -n}' -X
-   github.com/lyf571321556/manhour-reminder/cmd.version=v1.0.2"  -o manhour-robot   
+   github.com/lyf571321556/manhour-reminder/cmd.version=v1.0.2"  -o manhour-robot
+
+4. 容器内运行   
+docker build -f ./devops/Dockerfile -t lyf571321556/mahour-robot:1.0.0 .   
+docker run --privileged=true --name manhour-robot -v /Users/liuyanfeng/GoWorkspace/manhour-reminder/conf:/conf -v
+/Users/liuyanfeng/GoWorkspace/manhour-reminder/reminder.log:/reminder.log lyf571321556/mahour-robot:1.0.0
+--config=./conf/dev_config.yaml start
+
