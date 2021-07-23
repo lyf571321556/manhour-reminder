@@ -36,7 +36,6 @@ var startCmd = &cobra.Command{
 				return
 			}
 			ioutil.WriteFile(".pid.lock", []byte(fmt.Sprintf("%d", command.Process.Pid)), 0666)
-			fmt.Println(fmt.Sprintf("service start, [PID] %d running...\n", command.Process.Pid))
 			os.Exit(0)
 		}
 		startServer()

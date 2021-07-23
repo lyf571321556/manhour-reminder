@@ -29,8 +29,10 @@ go build -ldflags "-X main.Time=value -X main.User=value -X package_path.variabl
    github.com/lyf571321556/manhour-reminder/cmd.version=v1.0.2"  -o manhour-robot
 
 4. 容器内运行   
-docker build -f ./devops/Dockerfile -t lyf571321556/mahour-robot:1.0.0 .   
-docker run --privileged=true --name manhour-robot -v /Users/liuyanfeng/GoWorkspace/manhour-reminder/conf:/conf -v
-/Users/liuyanfeng/GoWorkspace/manhour-reminder/reminder.log:/reminder.log lyf571321556/mahour-robot:1.0.0
+docker build -f ./devops/Dockerfile -t lyf571321556/manhour-robot:1.0.0 .   
+docker run --privileged=true --name manhour-robot -v /Users/liuyanfeng/GoWorkspace/manhour-reminder:/app/manhour-robot/ lyf571321556/manhour-robot:1.0.0
 --config=./conf/dev_config.yaml start
 
+5. docker buildx构建多平台镜像   
+   docker buildx build -f ./devops/Dockerfile -t lyf571321556/manhour-robot:1.0.0 --platform=linux/arm64,linux/amd64 . --push
+   docker run --name manhour-robot -v /app/manhour-robot:/  lyf571321556/manhour-robot:1.0.0 --config=./conf/dev_config.yaml start
