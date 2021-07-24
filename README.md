@@ -35,4 +35,7 @@ docker run --privileged=true --name manhour-robot -v /Users/liuyanfeng/GoWorkspa
 
 5. docker buildx构建多平台镜像   
    docker buildx build -f ./devops/Dockerfile -t lyf571321556/manhour-robot:1.0.0 --platform=linux/arm64,linux/amd64 . --push
-   docker run --name manhour-robot -v /app/manhour-robot:/  lyf571321556/manhour-robot:1.0.0 --config=./conf/dev_config.yaml start
+   //启动一个后台运行，且停止后自动重启的container
+   docker run -d --restart always --name manhour-robot -v /apps:/apps  lyf571321556/manhour-robot:1.0.0 --config=/app/conf/dev_config.yaml start
+   //测试container中的/app/manhour-robot程序命令
+   docker exec -it 60e6fa6835ba /app/manhour-robot test --config=/apps/conf/dev_config.yaml
